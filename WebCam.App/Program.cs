@@ -1,4 +1,8 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
@@ -20,11 +24,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/images")),
+    RequestPath = new PathString("/images")
+});
 
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseStaticFiles();
 // for Attribute routing
 app.MapControllers();
 //// for conventional routing

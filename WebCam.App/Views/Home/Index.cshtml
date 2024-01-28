@@ -1,13 +1,13 @@
 ﻿@{
-    Layout = null;
+    //Layout = null;
 }
-
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style type="text/css">
         body {
             font-family: Arial;
@@ -17,12 +17,15 @@
         table {
             border: 1px solid #ccc;
             border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
         }
 
             table th {
                 background-color: #F7F7F7;
                 color: #333;
                 font-weight: bold;
+                text-align: center;
             }
 
             table th, table td {
@@ -30,57 +33,100 @@
                 border: 1px solid #ccc;
             }
 
+        #webcam {
+            width: 100%;
+            height: auto;
+            max-width: 320px; /* Set a maximum width to prevent stretching on larger screens */
+        }
+
         .center {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh; /* This ensures the container takes the full height of the viewport */
         }
+        @@media (max-width: 575.98px) {
+            #webcam-container {
+                max-width: 100%;
+            }
+        }
+
+        .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 0px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .img-fluid {
+            /* max-width: 100%; */
+            height: auto;
+        }
+
+        col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+            position: relative;
+            width: 100%;
+             padding-right: 0px; 
+            padding-left: 15px;
+        }
     </style>
 </head>
 <body>
-    <div class="center">
-        <table border="0" cellpadding="0" cellspacing="0">
-            <tr>
-                <th align="center"><u>Live Camera</u></th>
-                <th align="center"><u>Captured Picture</u></th>
-            </tr>
-            <tr>
-                <td><div id="webcam"></div></td>
-                <td><img id="imgCapture" /></td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <input type="button" id="btnCapture" value="Capture" />
-                    <input type="button" id="btnSwitchCam" value="Switch" />
-
-                </td>
-                <td align="center">
-                    <input type="button" id="btnUpload" value="Upload" disabled="disabled" />
-                </td>
-            </tr>
-        </table>
+    <div class="container">
+        <div class="text-center">
+            <h5><u>Live Camera</u></h5>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div id="webcam-container" class="text-center">
+                    <div id="webcam"></div>
+                </div>
+                <div class="text-center mt-1">
+                    <input type="button" id="btnCapture" class="btn btn-primary" value="Capture" />
+                    <input type="button" id="btnSwitchCam" class="btn btn-secondary" value="Switch" />
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="text-center">
+                    <img id="imgCapture" class="img-fluid" />
+                </div>
+                <div class="text-center mt-1">
+                    <input type="button" id="btnUpload" class="btn btn-success" value="Upload" disabled="disabled" />
+                </div>
+            </div>
+        </div>
     </div>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/naptha/opentype.js/0.14.0/opentype.js"></script>
     <script src="~/js/webcam/webcam.min.js"></script>
     <script type="text/javascript">
         $(function () {
             var isFrontCam = true; // Variable to track the current camera
-            Webcam.set({
-                width: 320,
-                height: 240,
-                image_format: 'jpeg',
-                jpeg_quality: 100,
-                constraints: {
-                    facingMode: isFrontCam ? 'user' : 'environment'
-                }
-            });
-            // preload shutter audio clip
-            // var shutter = new Audio();
-            // shutter.autoplay = false;
-            // shutter.src = navigator.userAgent.match(/Firefox/) ? '/sounds/shutter.ogg' : '/sounds/shutter.mp3';
 
-            //Webcam.attach('#webcam');
+            // Function to set webcam dimensions dynamically
+            function setWebcamDimensions() {
+                var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+                // Set webcam dimensions based on screen size
+                Webcam.set({
+                    width: screenWidth < 576 ? screenWidth : screenWidth < 992 ? 320 : 540,
+                    height: screenWidth < 576 ? screenHeight : screenWidth < 992 ? 240 : 380,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100,
+                    constraints: {
+                        facingMode: isFrontCam ? 'user' : 'environment'
+                    }
+                });
+            }
+
+            setWebcamDimensions(); // Initial setup
+
             Webcam.attach('#webcam', function (err, stream) {
                 if (err) {
                     console.error("Error initializing webcam:", err);
@@ -90,16 +136,13 @@
             });
 
             $("#btnCapture").click(function () {
-                $('#btnCapture').val('Wait...').attr('disabled', true)
-                //Uncomment to play stutter sound.
-                //shutter.play();
+                $('#btnCapture').val('Wait...').attr('disabled', true);
+
                 Webcam.snap(function (data_uri) {
                     $("#imgCapture")[0].src = data_uri;
                     $("#btnUpload").removeAttr("disabled");
                     $("#btnCapture").val('Capture').removeAttr("disabled");
-
                 });
-
             });
 
             $("#btnSwitchCam").click(function () {
@@ -107,15 +150,7 @@
 
                 Webcam.reset(); // Reset the webcam
 
-                Webcam.set({
-                    width: 320,
-                    height: 240,
-                    image_format: 'jpeg',
-                    jpeg_quality: 100,
-                    constraints: {
-                        facingMode: isFrontCam ? 'user' : 'environment'
-                    }
-                });
+                setWebcamDimensions(); // Set dimensions based on the updated camera status
 
                 Webcam.attach('#webcam');
             });
@@ -132,6 +167,11 @@
                         alert(r.message);
                     }
                 });
+            });
+
+            // Adjust dimensions on window resize
+            $(window).resize(function () {
+                setWebcamDimensions();
             });
         });
     </script>

@@ -1,6 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model List<ImagesData>
+@using System.IO;
+@using WebCam.App.Controllers
 
+@{
+    ViewData["Title"] = "Documents";
+}
 <p>Use this page to detail your site's privacy policy.</p>
+<div>
+    <h2>List of Image Paths:</h2>
+    <ul>
+        @foreach (var imagePath in Model)
+        {
+            <li>
+                <a href="@Url.Content(imagePath.Path)" target="_blank">@imagePath.Name</a>
+            </li>
+
+        }
+    </ul>
+</div> 
